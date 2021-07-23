@@ -50,11 +50,11 @@ namespace VMS.TPS
                 {
                     case true:
                         BODY = str;
-                        var bodyMesh = BODY.MeshGeometry;
-                        Point3DCollection meshPositionsBODY = new Point3DCollection();
-                        meshPositionsBODY = bodyMesh.Positions;
+                        var body_Mesh = BODY.MeshGeometry;
+                        Point3DCollection meshPositions_BODY = new Point3DCollection();
+                        meshPositions_BODY = body_Mesh.Positions;
 
-                        foreach (Point3D pointBODY in meshPositionsBODY)
+                        foreach (Point3D pointBODY in meshPositions_BODY)
                         {
                             BODY_Y.Add(pointBODY.Y);
                         }
@@ -64,11 +64,11 @@ namespace VMS.TPS
                         {
                             case true:
                                 COUCH_SURFACE = str;
-                                var couchsurfaceMesh = COUCH_SURFACE.MeshGeometry;
-                                Point3DCollection meshPositionsCOUCH_SURFACE = new Point3DCollection();
-                                meshPositionsCOUCH_SURFACE = couchsurfaceMesh.Positions;
+                                var couchsurface_Mesh = COUCH_SURFACE.MeshGeometry;
+                                Point3DCollection meshPositions_COUCH_SURFACE = new Point3DCollection();
+                                meshPositions_COUCH_SURFACE = couchsurface_Mesh.Positions;
 
-                                foreach (Point3D pointCOUCH_SURFACE in meshPositionsCOUCH_SURFACE)
+                                foreach (Point3D pointCOUCH_SURFACE in meshPositions_COUCH_SURFACE)
                                 {
                                     B_Y_Abs.Add(Math.Abs(isoctr.Y - pointCOUCH_SURFACE.Y));
                                     B_Y.Add(isoctr.Y - pointCOUCH_SURFACE.Y);
