@@ -73,8 +73,8 @@ namespace VMS.TPS
                                     B_Y_Abs.Add(Math.Abs(isoctr.Y - pointCOUCH_SURFACE.Y));
                                     B_Y.Add(isoctr.Y - pointCOUCH_SURFACE.Y);
                                 }
-                                B_Y_Min = B_Y_Abs.Min() / 10;
-                                int B_Y_ABs_idx = B_Y_Abs.IndexOf(B_Y_Min * 10);
+                                int B_Y_ABs_idx = B_Y_Abs.IndexOf(B_Y_Abs.Min());
+                                B_Y_Min = Math.Round(B_Y_Abs.Min() / 10, 2);
                                 B_Y_Min_Non_Abs = B_Y[B_Y_ABs_idx];
                                 break;
                         }
@@ -122,17 +122,17 @@ namespace VMS.TPS
 
             //double A = Math.Round(Math.Abs(BODY_Y_Max - BODY_Y_Min) / 10, 2);
             double A = Math.Round(Math.Abs((BODY_Y_Max - BODY_Y_Min) + Add_Min) / 10, 2);
-            B_Y_Min = Math.Round(B_Y_Min, 2);
+            //B_Y_Min = Math.Round(B_Y_Min, 2);
             double C_Y_Min = Math.Round(C_Y.Min() / 10, 2);
 
-            string ptInfo = "Course ID: " + course.Id + " - Treatment Plan ID: " + planSetup.Id;
+            string ptInfo = "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "Course ID: " + course.Id + Environment.NewLine + "Treatment Plan ID: " + planSetup.Id + Environment.NewLine + "<><><><><><><><><><><><><><><><>";
 
             MessageBox.Show(ptInfo + Environment.NewLine + Environment.NewLine
                 + "Table surface to Farthest skin surface distance (A)" + Environment.NewLine + "\t      A = " + A + " cm" + Environment.NewLine + Environment.NewLine
                 + "Table surface to isocenter or prostate / prostatic bed center distance (B)" + Environment.NewLine + "\t      B = " + B_Y_Min + " cm" + Environment.NewLine + Environment.NewLine
-                + "Farthest Skin surface to prostate / prostatic bed or isocenter distance (A – B)" + Environment.NewLine + "\tA - B = " + (A - B_Y_Min) + " cm" + Environment.NewLine + Environment.NewLine
+                + "Farthest Skin surface to prostate / prostatic bed or isocenter distance (A – B)" + Environment.NewLine + "\tA – B = " + (A - B_Y_Min) + " cm" + Environment.NewLine + Environment.NewLine
                 + "Table surface to closest transponder distance (C)" + Environment.NewLine + "\t      C = " + (C_Y_Min) + " cm" + Environment.NewLine + Environment.NewLine
-                + "(Farthest) Skin surface to closest transponder distance (A – C)" + Environment.NewLine + "\tA - C = " + (A - C_Y_Min) + " cm"
+                + "(Farthest) Skin surface to closest transponder distance (A – C)" + Environment.NewLine + "\tA – C = " + (A - C_Y_Min) + " cm"
                 , "Patient Name: " + patient.Name);
             //}
         }
