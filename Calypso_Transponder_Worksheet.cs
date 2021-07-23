@@ -88,7 +88,7 @@ namespace VMS.TPS
                 {
                     case true:
 
-                        if (rp.Id.ToLower().Contains("apex") || rp.Id.ToLower().Contains("right") || rp.Id.ToLower().Contains("left"))
+                        if (rp.Id.ToLower().EndsWith("apex") || rp.Id.ToLower().EndsWith("right") || rp.Id.ToLower().EndsWith("left"))
                         {
                             VVector RefP = rp.GetReferencePointLocation(planSetup);
                             RefP = context.Image.DicomToUser(RefP, planSetup);
