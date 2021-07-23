@@ -129,11 +129,11 @@ namespace VMS.TPS
             string ptInfo = "Course ID: " + course.Id + " - Treatment Plan ID: " + planSetup.Id;
 
             MessageBox.Show(ptInfo + Environment.NewLine + Environment.NewLine
-                + "Table surface to Farthest skin surface distance (A)" + Environment.NewLine + "\t      A = " + A.ToString("0.00") + " cm" + Environment.NewLine + Environment.NewLine
-                + "Table surface to isocenter or prostate / prostatic bed center distance (B)" + Environment.NewLine + "\t      B = " + B_Y_Min.ToString("0.00") + " cm" + Environment.NewLine + Environment.NewLine
-                + "Farthest Skin surface to prostate / prostatic bed or isocenter distance (A – B)" + Environment.NewLine + "\tA - B = " + (A - B_Y_Min).ToString("0.00") + " cm" + Environment.NewLine + Environment.NewLine
-                + "Table surface to closest transponder distance (C)" + Environment.NewLine + "\t      C = " + (C_Y_Min).ToString("0.00") + " cm" + Environment.NewLine + Environment.NewLine
-                + "(Farthest) Skin surface to closest transponder distance (A – C)" + Environment.NewLine + "\tA - C = " + (A - C_Y_Min).ToString("0.00") + " cm"
+                + "Table surface to Farthest skin surface distance (A)" + Environment.NewLine + "\t      A = " + A + " cm" + Environment.NewLine + Environment.NewLine
+                + "Table surface to isocenter or prostate / prostatic bed center distance (B)" + Environment.NewLine + "\t      B = " + B_Y_Min + " cm" + Environment.NewLine + Environment.NewLine
+                + "Farthest Skin surface to prostate / prostatic bed or isocenter distance (A – B)" + Environment.NewLine + "\tA - B = " + (A - B_Y_Min) + " cm" + Environment.NewLine + Environment.NewLine
+                + "Table surface to closest transponder distance (C)" + Environment.NewLine + "\t      C = " + (C_Y_Min) + " cm" + Environment.NewLine + Environment.NewLine
+                + "(Farthest) Skin surface to closest transponder distance (A – C)" + Environment.NewLine + "\tA - C = " + (A - C_Y_Min) + " cm"
                 , "Patient Name: " + patient.Name);
             //}
         }
