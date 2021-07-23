@@ -18,7 +18,6 @@ namespace VMS.TPS
         public Script()
         {
         }
-
         //[MethodImpl(MethodImplOptions.NoInlining)]
         public void Execute(ScriptContext context)
         {
@@ -121,7 +120,7 @@ namespace VMS.TPS
 
             double Add_Min = BODY_Y_MaxMin.Min();
 
-            //double A = Math.Abs(Math.Abs(BODY_Y_Min) - (isoctr.Y - B_Y_Min_Non_Abs)) / 10;
+            //double A = Math.Round(Math.Abs(BODY_Y_Max - BODY_Y_Min) / 10, 2);
             double A = Math.Round(Math.Abs((BODY_Y_Max - BODY_Y_Min) + Add_Min) / 10, 2);
             B_Y_Min = Math.Round(B_Y_Min, 2);
             double C_Y_Min = Math.Round(C_Y.Min() / 10, 2);
