@@ -82,7 +82,6 @@ namespace VMS.TPS
                         break;
                 }
             }
-
             foreach (ReferencePoint rp in planSetup.ReferencePoints)
             {
                 switch (rp.HasLocation(planSetup))
@@ -133,7 +132,7 @@ namespace VMS.TPS
                 + "Table surface to isocenter or prostate / prostatic bed center distance (B) = " + Environment.NewLine + "\t" + B_Y_Min.ToString("0.00") + " cm" + Environment.NewLine + Environment.NewLine 
                 + "Farthest Skin surface to prostate / prostatic bed or isocenter distance (A – B) = " + Environment.NewLine + "\t" + (A - B_Y_Min).ToString("0.00") + " cm" + Environment.NewLine + Environment.NewLine 
                 + "Table surface to closest transponder distance (C) = " + Environment.NewLine + "\t" + (C_Y_Min).ToString("0.00") + " cm" + Environment.NewLine + Environment.NewLine 
-                + "(Farthest) Skin Surface to closest transponder distance (A – C) = " + Environment.NewLine + "\t" + (A - C_Y_Min).ToString("0.00") + " cm"
+                + "(Farthest) Skin surface to closest transponder distance (A – C) = " + Environment.NewLine + "\t" + (A - C_Y_Min).ToString("0.00") + " cm"
                 , "Patient Name: " + patient.Name);
             //}
         }
