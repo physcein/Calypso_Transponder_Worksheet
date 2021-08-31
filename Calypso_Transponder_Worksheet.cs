@@ -151,7 +151,6 @@ namespace VMS.TPS
 
             if (isoN == 1)
             {
-
                 ptInfo = "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "Course ID: " + course.Id + Environment.NewLine + "Treatment Plan ID: " + planSetup.Id + Environment.NewLine + "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "@ Relative to \"BEAM ISOCENTER\" : ";
 
                 MessageBox.Show(ptInfo + Environment.NewLine + Environment.NewLine
@@ -164,7 +163,6 @@ namespace VMS.TPS
             }
             else if (isoN == 2)
             {
-
                 ptInfo = "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "Course ID: " + course.Id + Environment.NewLine + "Treatment Plan ID: " + planSetup.Id + Environment.NewLine + "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "@ Relative to \"USER ORIGIN\" : ";
 
                 MessageBox.Show(ptInfo + Environment.NewLine + Environment.NewLine
@@ -175,7 +173,6 @@ namespace VMS.TPS
                     + "(Farthest) Skin Surface to Closest Transponder Sistance (A – C)" + Environment.NewLine + "\tA – C = " + (A - C_Y_Min) + " cm"
                     , "Patient Name: " + patient.Name);
             }
-
             //}
         }
         public static Point3D GetIsocenter(Beam beam)
