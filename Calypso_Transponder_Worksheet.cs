@@ -35,7 +35,7 @@ namespace VMS.TPS
             beamList.Add(planSetup.Beams.FirstOrDefault());
             Point3D isoctr;
 
-            int isoN = 0;
+            //int isoN = 0;
 
             //if (beamList[0] != null)
             //{
@@ -43,7 +43,7 @@ namespace VMS.TPS
             VVector beamOri_ = beamList[0].IsocenterPosition;
             VVector beamOri = PlanningStructureSet.Image.DicomToUser(beamOri_, planSetup); 
             Point3D isoctr1 = GetTheIsocenter(beamOri);
-            isoN = 1;
+            //isoN = 1;
             //}
             //else
             //{
@@ -182,8 +182,8 @@ namespace VMS.TPS
 
             string ptInfo = "";
 
-            if (isoN == 1)
-            {
+            //if (isoN == 1)
+            //{
                 ptInfo = "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "Course ID: " + course.Id + Environment.NewLine + "Treatment Plan ID: " + planSetup.Id + Environment.NewLine + "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "@ For \"BEAM ISOCENTER\" : " + Environment.NewLine + iso_coord + Transponder_RP_Coord + Transponder_Contour_Coord;
 
                 MessageBox.Show(ptInfo + Environment.NewLine
@@ -193,19 +193,19 @@ namespace VMS.TPS
                     + "Table Surface to Closest Transponder Distance (C)" + Environment.NewLine + "\t      C = " + (C_Y_Min) + " cm" + Environment.NewLine + Environment.NewLine
                     + "(Farthest) Skin Surface to Closest Transponder Distance (A – C)" + Environment.NewLine + "\tA – C = " + (A - C_Y_Min) + " cm"
                     , "Patient Name: " + patient.Name);
-            }
-            else if (isoN == 2)
-            {
-                ptInfo = "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "Course ID: " + course.Id + Environment.NewLine + "Treatment Plan ID: " + planSetup.Id + Environment.NewLine + "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "@ For \"USER ORIGIN\" : " + Environment.NewLine + iso_coord + Transponder_RP_Coord + Transponder_Contour_Coord;
+            //}
+            //else if (isoN == 2)
+            //{
+            //    ptInfo = "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "Course ID: " + course.Id + Environment.NewLine + "Treatment Plan ID: " + planSetup.Id + Environment.NewLine + "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "@ For \"USER ORIGIN\" : " + Environment.NewLine + iso_coord + Transponder_RP_Coord + Transponder_Contour_Coord;
 
-                MessageBox.Show(ptInfo + Environment.NewLine
-                    + "Table Surface to Farthest Skin Surface Distance (A)" + Environment.NewLine + "\t      A = " + A + " cm" + Environment.NewLine + Environment.NewLine
-                    + "Table Surface to User Origin or Prostate / Prostatic Bed Center Distance (B)" + Environment.NewLine + "\t      B = " + B_Y_Min + " cm" + Environment.NewLine + Environment.NewLine
-                    + "Farthest Skin Surface to Prostate / Prostatic Bed or User Origin Distance (A – B)" + Environment.NewLine + "\tA – B = " + (A - B_Y_Min) + " cm" + Environment.NewLine + Environment.NewLine
-                    + "Table Surface to Closest Transponder Distance (C)" + Environment.NewLine + "\t      C = " + (C_Y_Min) + " cm" + Environment.NewLine + Environment.NewLine
-                    + "(Farthest) Skin Surface to Closest Transponder Distance (A – C)" + Environment.NewLine + "\tA – C = " + (A - C_Y_Min) + " cm"
-                    , "Patient Name: " + patient.Name);
-            }
+            //    MessageBox.Show(ptInfo + Environment.NewLine
+            //        + "Table Surface to Farthest Skin Surface Distance (A)" + Environment.NewLine + "\t      A = " + A + " cm" + Environment.NewLine + Environment.NewLine
+            //        + "Table Surface to User Origin or Prostate / Prostatic Bed Center Distance (B)" + Environment.NewLine + "\t      B = " + B_Y_Min + " cm" + Environment.NewLine + Environment.NewLine
+            //        + "Farthest Skin Surface to Prostate / Prostatic Bed or User Origin Distance (A – B)" + Environment.NewLine + "\tA – B = " + (A - B_Y_Min) + " cm" + Environment.NewLine + Environment.NewLine
+            //        + "Table Surface to Closest Transponder Distance (C)" + Environment.NewLine + "\t      C = " + (C_Y_Min) + " cm" + Environment.NewLine + Environment.NewLine
+            //        + "(Farthest) Skin Surface to Closest Transponder Distance (A – C)" + Environment.NewLine + "\tA – C = " + (A - C_Y_Min) + " cm"
+            //        , "Patient Name: " + patient.Name);
+            //}
             //}
         }
         public static Point3D GetIsocenter(Beam beam)
