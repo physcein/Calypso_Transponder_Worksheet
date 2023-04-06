@@ -41,7 +41,7 @@ namespace VMS.TPS
             //{
             isoctr = GetIsocenter(beamList[0]);
             VVector beamOri_ = beamList[0].IsocenterPosition;
-            VVector beamOri = context.Image.DicomToUser(beamOri_, planSetup); 
+            VVector beamOri = planSetup.StructureSet.Image.DicomToUser(beamOri_, planSetup); 
             Point3D isoctr1 = GetTheIsocenter(beamOri);
             isoN = 1;
             //}
