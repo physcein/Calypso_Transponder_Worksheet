@@ -23,7 +23,6 @@ namespace VMS.TPS
         {
             Patient patient = context.Patient;
             Course course = context.Course;
-
             PlanSetup planSetup = context.PlanSetup;
 
             //foreach (PlanSetup planSetup in course.PlanSetups)//.Where(pl => pl.RTPrescription != null))
@@ -32,29 +31,37 @@ namespace VMS.TPS
             var PlanStructures = PlanningStructureSet.Structures;
 
             var beamList = new List<Beam>();
-            beamList.Add(planSetup.Beams.Where(b => b.Meterset.Value > 0).FirstOrDefault());
-            //Beam beam1 = planSetup.Beams.Where(b => b.Meterset.Value > 0).FirstOrDefault();
+            //beamList.Add(planSetup.Beams.Where(b => b.Meterset.Value > 0).FirstOrDefault());
+            beamList.Add(planSetup.Beams.FirstOrDefault());
             Point3D isoctr;
 
             int isoN = 0;
 
-            if (beamList[0] != null)
-            {
-                isoctr = GetIsocenter(beamList[0]);
-                isoN = 1;
-            }
-            else
-            {
-                VVector Origin = context.Image.DicomToUser(planSetup.StructureSet.Image.UserOrigin, planSetup);
+            //if (beamList[0] != null)
+            //{
+            isoctr = GetIsocenter(beamList[0]);
+            VVector beamOri_ = beamList[0].IsocenterPosition;
+            VVector beamOri = context.Image.DicomToUser(beamOri_, planSetup); 
+            Point3D isoctr1 = GetTheIsocenter(beamOri);
+            isoN = 1;
+            //}
+            //else
+            //{
+            //    VVector Origin = context.Image.DicomToUser(planSetup.StructureSet.Image.UserOrigin, planSetup);
 
-                isoctr = new Point3D
-                {
-                    X = Origin.x,
-                    Y = Origin.y,
-                    Z = Origin.z
-                };
-                isoN = 2;
-            }
+            //    isoctr = new Point3D
+            //    {
+            //        X = Origin.x,
+            //        Y = Origin.y,
+            //        Z = Origin.z
+            //    };
+            //    isoN = 2;
+            //}
+
+            string iso_coord = "\n" + "Beam Isocenter Location " + " (cm) \n\t\t\t= \t(" + (isoctr1.X / 10).ToString("0.00") + ", " + (isoctr1.Y / 10).ToString("0.00") + ", " + (isoctr1.Z / 10).ToString("0.00") + ")" + Environment.NewLine;
+
+            //MessageBox.Show(iso_coord);
+
 
             var BODY_Y = new List<double>();
             var B_Y_Abs = new List<double>();
@@ -65,6 +72,8 @@ namespace VMS.TPS
 
             Structure BODY = null;
             Structure COUCH_SURFACE = null;
+
+            //string test = "";
 
             foreach (Structure str in PlanStructures.Where(s => !s.IsEmpty))
             {
@@ -103,33 +112,57 @@ namespace VMS.TPS
                         break;
                 }
             }
-            foreach (ReferencePoint rp in planSetup.ReferencePoints)
+            string Transponder_RP_Coord = "";
+            //double rfpy = 0;
+            foreach (ReferencePoint rp in planSetup.ReferencePoints.OrderBy(p => p.Id))
             {
                 switch (rp.HasLocation(planSetup))
                 {
                     case true:
 
-                        if (rp.Id.ToLower().EndsWith("apex") || rp.Id.ToLower().EndsWith("right") || rp.Id.ToLower().EndsWith("left"))
+                        if (rp.Id.ToLower().EndsWith("apex") || (rp.Id.ToLower().EndsWith("right") || rp.Id.ToLower().EndsWith("rt")) || (rp.Id.ToLower().EndsWith("left") || rp.Id.ToLower().EndsWith("lt")))
                         {
                             VVector RefP = rp.GetReferencePointLocation(planSetup);
-                            RefP = context.Image.DicomToUser(RefP, planSetup);
+                            VVector RefP1 = context.Image.DicomToUser(RefP, planSetup);
+                            //if(rp.Id.ToLower().EndsWith("apex"))
+                            //{
+                            Transponder_RP_Coord += Environment.NewLine + "Transponder Reference Point Location" + Environment.NewLine;
+                            //}
+                            Transponder_RP_Coord += "\t" + rp.Id + " (cm) \t= \t(" + (RefP1.x / 10).ToString("0.00") + ", " + (RefP1.y / 10).ToString("0.00") + ", " + (RefP1.z / 10).ToString("0.00") + ")" + Environment.NewLine;
+
+                            //RefP = context.Image.DicomToUser(RefP, planSetup);
+                            //rfpy = RefP.y;
+                            //MessageBox.Show(rfpy.ToString());
+
                             C_Y.Add(Math.Abs(RefP.y - (isoctr.Y - B_Y_Min_Non_Abs)));
                         }
                         break;
                 }
             }
+
+            string Transponder_Contour_Coord = "";
             if (C_Y.Count() < 1)
             {
                 foreach (Structure str in PlanStructures.Where(s => !s.IsEmpty))
                 {
-                    if (str.Id.ToLower().EndsWith("apex") || str.Id.ToLower().EndsWith("right") || str.Id.ToLower().EndsWith("left"))
+                    if (str.Volume < 0.5 /*&& (str.Id.ToLower().StartsWith("trans") || str.Id.ToLower().StartsWith("tp"))*/ && (str.Id.ToLower().EndsWith("apex") || (str.Id.ToLower().EndsWith("right") || str.Id.ToLower().EndsWith("rt")) || (str.Id.ToLower().EndsWith("left") || str.Id.ToLower().EndsWith("lt"))))
                     {
-                        VVector RefP = str.CenterPoint;
-                        RefP = context.Image.DicomToUser(RefP, planSetup);
-                        C_Y.Add(Math.Abs(RefP.y - (isoctr.Y - B_Y_Min_Non_Abs)));
+                        VVector TPstrP = str.CenterPoint;
+                        VVector TPstrP1 = context.Image.DicomToUser(TPstrP, planSetup);
+
+                        //if (str.Id.ToLower().EndsWith("apex"))
+                        //{
+                        Transponder_Contour_Coord += "Transponder Contour CenterPoint Location" + Environment.NewLine;
+                        //}
+                        Transponder_Contour_Coord += "\t" + str.Id + " (cm) \t= \t(" + (TPstrP1.x / 10).ToString("0.00") + ", " + (TPstrP1.y / 10).ToString("0.00") + ", " + (TPstrP1.z / 10).ToString("0.00") + ")" + Environment.NewLine;
+
+                        //TPstrP = context.Image.DicomToUser(TPstrP, planSetup);
+                        C_Y.Add(Math.Abs(TPstrP.y - (isoctr.Y - B_Y_Min_Non_Abs)));
+                        //test += (TPstrP.y - (isoctr.Y - B_Y_Min_Non_Abs)).ToString("0.00") + ", " + Math.Abs(TPstrP.y - (isoctr.Y - B_Y_Min_Non_Abs)).ToString("0.00") + "\n";
                     }
                 }
             }
+            //MessageBox.Show(test);
 
             double BODY_Y_Max = BODY_Y.Max();
             double BODY_Y_Min = BODY_Y.Min();
@@ -151,26 +184,26 @@ namespace VMS.TPS
 
             if (isoN == 1)
             {
-                ptInfo = "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "Course ID: " + course.Id + Environment.NewLine + "Treatment Plan ID: " + planSetup.Id + Environment.NewLine + "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "@ Relative to \"BEAM ISOCENTER\" : ";
+                ptInfo = "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "Course ID: " + course.Id + Environment.NewLine + "Treatment Plan ID: " + planSetup.Id + Environment.NewLine + "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "@ For \"BEAM ISOCENTER\" : " + Environment.NewLine + iso_coord + Transponder_RP_Coord + Transponder_Contour_Coord;
 
-                MessageBox.Show(ptInfo + Environment.NewLine + Environment.NewLine
+                MessageBox.Show(ptInfo + Environment.NewLine
                     + "Table Surface to Farthest Skin Surface Distance (A)" + Environment.NewLine + "\t      A = " + A + " cm" + Environment.NewLine + Environment.NewLine
                     + "Table Surface to Isocenter or Prostate / Prostatic Bed Center Distance (B)" + Environment.NewLine + "\t      B = " + B_Y_Min + " cm" + Environment.NewLine + Environment.NewLine
                     + "Farthest Skin Surface to Prostate / Prostatic Bed or Isocenter Distance (A – B)" + Environment.NewLine + "\tA – B = " + (A - B_Y_Min) + " cm" + Environment.NewLine + Environment.NewLine
-                    + "Table Durface to Closest Transponder Sistance (C)" + Environment.NewLine + "\t      C = " + (C_Y_Min) + " cm" + Environment.NewLine + Environment.NewLine
-                    + "(Farthest) Skin Surface to Closest Transponder Sistance (A – C)" + Environment.NewLine + "\tA – C = " + (A - C_Y_Min) + " cm"
+                    + "Table Surface to Closest Transponder Distance (C)" + Environment.NewLine + "\t      C = " + (C_Y_Min) + " cm" + Environment.NewLine + Environment.NewLine
+                    + "(Farthest) Skin Surface to Closest Transponder Distance (A – C)" + Environment.NewLine + "\tA – C = " + (A - C_Y_Min) + " cm"
                     , "Patient Name: " + patient.Name);
             }
             else if (isoN == 2)
             {
-                ptInfo = "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "Course ID: " + course.Id + Environment.NewLine + "Treatment Plan ID: " + planSetup.Id + Environment.NewLine + "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "@ Relative to \"USER ORIGIN\" : ";
+                ptInfo = "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "Course ID: " + course.Id + Environment.NewLine + "Treatment Plan ID: " + planSetup.Id + Environment.NewLine + "<><><><><><><><><><><><><><><><>" + Environment.NewLine + "@ For \"USER ORIGIN\" : " + Environment.NewLine + iso_coord + Transponder_RP_Coord + Transponder_Contour_Coord;
 
-                MessageBox.Show(ptInfo + Environment.NewLine + Environment.NewLine
+                MessageBox.Show(ptInfo + Environment.NewLine
                     + "Table Surface to Farthest Skin Surface Distance (A)" + Environment.NewLine + "\t      A = " + A + " cm" + Environment.NewLine + Environment.NewLine
                     + "Table Surface to User Origin or Prostate / Prostatic Bed Center Distance (B)" + Environment.NewLine + "\t      B = " + B_Y_Min + " cm" + Environment.NewLine + Environment.NewLine
                     + "Farthest Skin Surface to Prostate / Prostatic Bed or User Origin Distance (A – B)" + Environment.NewLine + "\tA – B = " + (A - B_Y_Min) + " cm" + Environment.NewLine + Environment.NewLine
-                    + "Table Durface to Closest Transponder Sistance (C)" + Environment.NewLine + "\t      C = " + (C_Y_Min) + " cm" + Environment.NewLine + Environment.NewLine
-                    + "(Farthest) Skin Surface to Closest Transponder Sistance (A – C)" + Environment.NewLine + "\tA – C = " + (A - C_Y_Min) + " cm"
+                    + "Table Surface to Closest Transponder Distance (C)" + Environment.NewLine + "\t      C = " + (C_Y_Min) + " cm" + Environment.NewLine + Environment.NewLine
+                    + "(Farthest) Skin Surface to Closest Transponder Distance (A – C)" + Environment.NewLine + "\tA – C = " + (A - C_Y_Min) + " cm"
                     , "Patient Name: " + patient.Name);
             }
             //}
@@ -182,6 +215,17 @@ namespace VMS.TPS
                 X = beam.IsocenterPosition.x,
                 Y = beam.IsocenterPosition.y,
                 Z = beam.IsocenterPosition.z
+            };
+            return iso;
+        }
+
+        public static Point3D GetTheIsocenter(VVector vector)
+        {
+            Point3D iso = new Point3D
+            {
+                X = vector.x,
+                Y = vector.y,
+                Z = vector.z
             };
             return iso;
         }
